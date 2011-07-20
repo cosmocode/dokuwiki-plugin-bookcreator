@@ -113,14 +113,14 @@ _ToolManDragGroup.prototype = {
 
 	onTopWhileDragging : function(zIndex) {
 		var zIndex = typeof(zIndex) != "undefined" ? zIndex : 100000;
-		var originalZIndex = ToolMan.css().readStyle(this.element, "z-index")
+		var originalZIndex = ToolMan.css().readStyle(this.element, "z-index");
 
 		this.register('dragstart', function(dragEvent) {
-			dragEvent.group.element.style.zIndex = zIndex
-		})
+			dragEvent.group.element.style.zIndex = zIndex;
+		});
 		this.register('dragend', function(dragEvent) {
-			dragEvent.group.element.style.zIndex = originalZIndex
-		})
+			dragEvent.group.element.style.zIndex = 'auto';
+		});
 	},
 
 	_dragInit : function(event) {

@@ -18,6 +18,7 @@ ToolMan._dragsortFactory = {
 	 * example: makeListSortable(myList, myFunc1, myFunc2, ... , myFuncN)
 	 */
 	makeListSortable : function(list) {
+	  if(!list) return;
 		var helpers = ToolMan.helpers()
 		var coordinates = ToolMan.coordinates()
 		var items = list.getElementsByTagName("li")
