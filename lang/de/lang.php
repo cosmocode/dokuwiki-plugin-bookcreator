@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $lang['bookcreator_nocookies']       = "Sie haben noch keine Seiten gewählt. Bitte überprüfen Sie, ob ihr Browser Cookies erlaubt und versuchen Sie es erneut.";
 $lang['bookcreator_empty']           = "Sie haben noch keine Seiten gewählt.";
 $lang['bookcreator_toprint']         = "Ausgewählte Seiten";
