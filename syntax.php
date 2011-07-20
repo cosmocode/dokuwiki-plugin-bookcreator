@@ -202,8 +202,9 @@ class syntax_plugin_bookcreator extends DokuWiki_Syntax_Plugin {
                 }
               }
               
-              $renderer->doc .= "<table width='100%' border='0' ><tr>";
-              $renderer->doc .= "<td width='60%' valign='top'>";
+//              $renderer->doc .= '<table width="100%" border="1" ><tr>';
+//              $renderer->doc .= "<td width='60%' valign='top'>";
+
 
               // Pagine selezionate
               for ($n = 1; $n <= $i; $n++) {            
@@ -223,6 +224,63 @@ class syntax_plugin_bookcreator extends DokuWiki_Syntax_Plugin {
                 }
               }
               // Pagine selezionate
+
+              // azzera selezione
+              $renderer->doc .= "<div>"; 
+              $onclick = "javascript:if(confirm('".$this->getLang('bookcreator_reserconfirm')."')) {book_removeAllPages('bookcreator'); document.reset.submit();}";
+              $renderer->doc .= '<form name="reset" class="button" method="get" action="'.wl($ID).'">';
+              $renderer->doc .= "<input type='button' value='".$this->getLang('bookcreator_reset')."' class='button' onclick=\"".$onclick."\">";
+              $renderer->doc .= "<input type='hidden' name='id' value='$ID'/>";
+              $renderer->doc .= formSecurityToken(false);
+              $renderer->doc .= '</form>';
+              $renderer->doc .= '</div>';
+              // azzera selezione
+
+
+              //Esportazione PDF
+              $renderer->doc .= "<div align='center'>"; 
+              $renderer->doc .= '<form class="button" method="get" action="'.wl($ID).'" accept-charset="'.$lang['encoding'].'">';
+              $renderer->doc .= "<fieldset style=\"text-align:left;\"><legend><b>".$this->getLang('bookcreator_export')."</b></legend>";
+              $renderer->doc .= $this->getLang('bookcreator_title')." ";
+              $renderer->doc .= '<input type="text" class="edit" value="'.$title.'" name="pdfbook_title" size="40" />';
+              $renderer->doc .= '<select name="do" size="1">';
+              $renderer->doc .= '<option value="export_html" selected="selected">'.$this->getLang('bookcreator_exportprint').'</option>';
+
+              if (file_exists(DOKU_PLUGIN."text/renderer.php") && !plugin_isdisabled("text")) {
+                $renderer->doc .= '<option value="export_text">'.$this->getLang('bookcreator_exporttext').'</option>';
+              }
+
+              if (file_exists(DOKU_PLUGIN."dw2pdf/action.php") && !plugin_isdisabled("dw2pdf")) {
+                $renderer->doc .= '<option value="export_pdfbook" selected="selected">'.$this->getLang('bookcreator_exportpdf').'</option>';
+              }
+              
+              $renderer->doc .= '</select>';
+              $renderer->doc .= '<input type="submit" value="'.$this->getLang('bookcreator_create').'" class="button"/>
+                  <input type="hidden" name="id" value="'.$ID.'" />';
+              $renderer->doc .= '</fieldset>';
+              $renderer->doc .= formSecurityToken(false);
+              $renderer->doc .= '</form>';
+              $renderer->doc .= '</div>';
+              //Esportazione PDF
+
+              
+              if ($this->usercansave) {
+                //Salva selezione
+                $renderer->doc .= "<div align='center'>"; 
+                $renderer->doc .= '<form class="button" method="post" action="'.wl($ID).'" accept-charset="'.$lang['encoding'].'">';
+                $renderer->doc .= "<fieldset style=\"text-align:left;\"><legend><b>".$this->getLang('bookcreator_saveselection')."</b></legend>";
+                $renderer->doc .= '<input type="text" class="edit" value="'.$title.'" name="bookcreator_title" />';
+                $renderer->doc .= '<input type="submit" value="'.$this->getLang('bookcreator_save').'" class="button"/>';
+                $renderer->doc .= '<input type="hidden" name="task" value="save" />
+                    <input type="hidden" name="id" value="'.$ID.'" />';
+                $renderer->doc .= '</fieldset>';
+                $renderer->doc .= formSecurityToken(false);
+                $renderer->doc .= '</form>';
+                $renderer->doc .= '</div>';
+                //Salva selezione
+              }
+
+
 
               // Pagine escluse dal libro
               if (isset($fav))   {
@@ -247,64 +305,16 @@ class syntax_plugin_bookcreator extends DokuWiki_Syntax_Plugin {
                 if ($i) $renderer->listu_close();
               }
 
-              // azzera selezione
-              $renderer->doc .= "<div align='center'>"; 
-              $onclick = "javascript:if(confirm('".$this->getLang('bookcreator_reserconfirm')."')) {book_removeAllPages('bookcreator'); document.reset.submit();}";
-              $renderer->doc .= '<form name="reset" class="button" method="get" action="'.wl($ID).'">';
-              $renderer->doc .= "<input type='button' value='".$this->getLang('bookcreator_reset')."' class='button' onclick=\"".$onclick."\">";
-              $renderer->doc .= "<input type='hidden' name='id' value='$ID'/>";
-              $renderer->doc .= formSecurityToken(false);
-              $renderer->doc .= '</form>';
-              $renderer->doc .= '</div>';
-              // azzera selezione
 
-              $renderer->doc .= "</td>";
-              $renderer->doc .= "<td width='40%' valign='top' >";
+//              $renderer->doc .= "</td>";
+//              $renderer->doc .= "<td width='40%' valign='top' >";
 
-              $renderer->doc .= "<div align='center'>"; 
+            
               
-              //Esportazione PDF
-              $renderer->doc .= '<form class="button" method="get" action="'.wl($ID).'" accept-charset="'.$lang['encoding'].'">';
-              $renderer->doc .= "<fieldset style=\"text-align:left;\"><legend><b>".$this->getLang('bookcreator_export')."</b></legend>";
-              $renderer->doc .= $this->getLang('bookcreator_title')." ";
-              $renderer->doc .= '<input type="text" class="edit" value="'.$title.'" name="pdfbook_title" size="40" />';
-              $renderer->doc .= '<select name="do" size="1">';
-              $renderer->doc .= '<option value="export_html" selected="selected">'.$this->getLang('bookcreator_exportprint').'</option>';
 
-              if (file_exists(DOKU_PLUGIN."text/renderer.php") && !plugin_isdisabled("text")) {
-                $renderer->doc .= '<option value="export_text">'.$this->getLang('bookcreator_exporttext').'</option>';
-              }
 
-              if (file_exists(DOKU_PLUGIN."dw2pdf/action.php") && !plugin_isdisabled("dw2pdf")) {
-                $renderer->doc .= '<option value="export_pdfbook" selected="selected">'.$this->getLang('bookcreator_exportpdf').'</option>';
-              }
-              
-              $renderer->doc .= '</select>';
-              $renderer->doc .= '<input type="submit" value="'.$this->getLang('bookcreator_create').'" class="button"/>
-                  <input type="hidden" name="id" value="'.$ID.'" />';
-              $renderer->doc .= '</fieldset>';
-              $renderer->doc .= formSecurityToken(false);
-              $renderer->doc .= '</form>';
-              //Esportazione PDF
-              
-              if ($this->usercansave) {
-                //Salva selezione
-                $renderer->doc .= '<form class="button" method="post" action="'.wl($ID).'" accept-charset="'.$lang['encoding'].'">';
-                $renderer->doc .= "<fieldset style=\"text-align:left;\"><legend><b>".$this->getLang('bookcreator_saveselection')."</b></legend>";
-                $renderer->doc .= '<input type="text" class="edit" value="'.$title.'" name="bookcreator_title" />';
-                $renderer->doc .= '<input type="submit" value="'.$this->getLang('bookcreator_save').'" class="button"/>';
-                $renderer->doc .= '<input type="hidden" name="task" value="save" />
-                    <input type="hidden" name="id" value="'.$ID.'" />';
-                $renderer->doc .= '</fieldset>';
-                $renderer->doc .= formSecurityToken(false);
-                $renderer->doc .= '</form>';
-                //Salva selezione
-              }
-              
-              $renderer->doc .= '</div>';
-
-              $renderer->doc .= "</tr></td>";
-              $renderer->doc .= "</table>";
+//              $renderer->doc .= "</tr></td>";
+//              $renderer->doc .= "</table>";
 
             } else {
               $renderer->doc .= $this->getLang('bookcreator_nocookies');
